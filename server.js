@@ -1,9 +1,8 @@
 const express = require("express");
-// const helmet = require("helmet");
 const postsRouter = require("./posts/postRouter");
 const usersRouter = require("./users/userRouter");
 const server = express();
-server.use(express.json(), logger);
+server.use(express.json(), logger); // uses logger on everything
 
 server.get("/", (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`);

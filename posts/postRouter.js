@@ -1,7 +1,7 @@
 const express = require("express");
 const db = require("./postDb");
-
 const router = express.Router();
+const mid = require("../middleware/middleware")
 router.use(express.json());
 
 router.get("/", (req, res) => {
@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
     .catch(error => {
       console.log(error);
     });
-});
+}); // working
 
 router.get("/:id", (req, res) => {
   const { id } = req.params;
@@ -24,7 +24,7 @@ router.get("/:id", (req, res) => {
     .catch(error => {
       console.log(error);
     });
-});
+}); // working
 
 router.delete("/:id", (req, res) => {
   db.remove(req.params.id)
@@ -34,9 +34,9 @@ router.delete("/:id", (req, res) => {
     .catch(error => {
       console.log(error);
     });
-});
+}); //working
 
-router.put("/:id", (req, res) => {
+router.put("/:id", validatePostId, (req, res) => {
   const { text } = req.body;
   const newText = { text };
 
@@ -47,10 +47,21 @@ router.put("/:id", (req, res) => {
     .catch(error => {
       console.log(error);
     });
-});
+}); // working
 
 // custom middleware
 
-function validatePostId(req, res, next) {}
+function validatePostId(req, res, next) {
+  const { id } = req.params;
+
+  db.getById(id).then(post => {
+    if (!post) {
+      res.status(404).json({ message: "invalid post id" });
+    } else {
+      req.post = post;
+      next();
+    }
+  });
+}
 
 module.exports = router;
