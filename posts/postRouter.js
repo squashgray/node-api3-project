@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
     });
 }); // working
 
-router.get("/:id", (req, res) => {
+router.get("/:id" , mid.validatePostId,  (req, res) => {
   const { id } = req.params;
   db.getById(id)
     .then(post => {
@@ -26,7 +26,7 @@ router.get("/:id", (req, res) => {
     });
 }); // working
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", mid.validatePostId, (req, res) => {
   db.remove(req.params.id)
     .then(removed => {
       res.status(200).json(removed);
@@ -36,7 +36,7 @@ router.delete("/:id", (req, res) => {
     });
 }); //working
 
-router.put("/:id", validatePostId, (req, res) => {
+router.put("/:id", validatePostId, mid.validatePost, (req, res) => {
   const { text } = req.body;
   const newText = { text };
 
